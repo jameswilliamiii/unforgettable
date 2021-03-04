@@ -7,8 +7,8 @@ Gem::Specification.new do |spec|
   spec.version       = Unforgettable::VERSION
   spec.authors       = ["James Stubblefield"]
 
-  spec.summary       = "A utility to run release tasks at the end of your deployment."
-  # spec.description   = "TODO: Write a longer description or delete this line."
+  spec.summary       = "Unforgettable tracks which tasks it has run previously, and which tasks still need to be invoked."
+  spec.description   = "Unforgettable tracks which tasks it has run previously, and which tasks still need to be invoked."
   spec.homepage      = "https://bitbucket.org/eightbitdevelopers/unforgettable"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.4.0")

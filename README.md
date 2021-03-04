@@ -1,6 +1,6 @@
 # Unforgettable
 
-How many times have you deployed a new release of a rails app and forgot to run a post-release rake tasks?  Unforgettable allows you to create these rake tasks and track which need to be run. Never forget to run post-release deploy rake tasks again!
+How many times have you deployed a new release of a rails app and forgot to run a post-release rake task?  Unforgettable tracks which tasks it has run previously, and which tasks still need to be invoked. Never forget to run post-release deploy rake tasks again!
 
 ## Installation
 
@@ -12,31 +12,31 @@ gem 'unforgettable'
 
 And then execute:
 
-    $ bundle install
+    bundle install
 
+Run the generator to create a migration for the table that will be used to track the tasks that Unforgettable invokes.
+
+    rails g unforgettable:install
+    rails db:migrate
 ## Usage
 
-Run the install task to generate a table that will track the Unforgettable release tasks that have been processed
+Generate new release tasks by running:
 
-    $ rails g unforgettable:install && rails db:migrate
+    rails g unforgettable:task
 
-You can generate your first release task by running
+This will create a new *.rake file in the folder `lib/tasks/unforgettable`.  You can then insert whatever code you need to run during your next Unforgettable release.
 
-    $ rails g unforgettable:task
-
-This will generate a new release rake file in the folder `lib/tasks/unforgettable`, and you can then insert whatever code you need to run during your next Unforgettable release.
-
-You can trigger all Unforgettable release tasks by running
+You can trigger all previously uninvoked Unforgettable release tasks by running
 
     $ rails unforgettable:release
 
 ### Integration with Capistrano
 
-Integrate Unforgettable with Capistrano by adding the below to your `deploy.rb` file.
+You can integrate Unforgettable with Capistrano deploys by adding the below to your `deploy.rb` file.
 
 ```ruby
 namespace :deploy do
-  desc 'Invoke release rake task on the server'
+  desc 'Invoke any new Unforgettable release tasks'
   task :release do
     on roles(:app) do
       within release_path do
@@ -53,12 +53,12 @@ after 'deploy:published',  'deploy:release'
 
 ### Rerunning Completed Tasks
 
-Unforgettable records all tasks that have been run in the `unforgettable_releases` table.
+Unforgettable records all tasks that have been run as a row on the `unforgettable_releases` table.
 
     irb(main):002:0> Unforgettable::Release.all
     => #<ActiveRecord::Relation [#<Unforgettable::Release id: 1, version: "release_20210303203356", created_at: "2021-03-04 02:37:49", updated_at: "2021-03-04 02:37:49">]>
 
-You can delete a previous record to force Unforgettable to run the task again when the next release is invoked, or just generate a new task with the generator.
+You can delete a previous record to force Unforgettable to run the task again.
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
