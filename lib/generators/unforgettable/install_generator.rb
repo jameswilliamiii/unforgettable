@@ -1,20 +1,16 @@
 require 'rails/generators'
 require 'rails/generators/active_record'
 
-module Unforgetable
+module Unforgettable
   module Generators
     class InstallGenerator < Rails::Generators::Base
       include Rails::Generators::Migration
 
-      desc "Create a release rake task that is used by Capistrano"
+      desc "Generate a migration for unforgettable_releases"
       source_root File.join(File.dirname(__FILE__), "templates")
 
-      def create_rakefile
-        template('release.rake', 'lib/tasks/release.rake')
-      end
-
-      def generate_model
-        migration_template "migration.rb", "db/migrate/create_cap_releases.rb", migration_version: migration_version
+      def generate_migration
+        migration_template "migration_template.rb", "db/migrate/create_unforgettable_releases.rb", migration_version: migration_version
       end
 
       private

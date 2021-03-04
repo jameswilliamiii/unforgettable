@@ -1,7 +1,8 @@
 PATH
   remote: .
   specs:
-    unforgetable (0.0.0)
+    unforgettable (0.0.0)
+      activerecord
 
 GEM
   remote: https://rubygems.org/
@@ -130,6 +131,7 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     thor (1.1.0)
+    timecop (0.9.4)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     websocket-driver (0.7.3)
@@ -146,7 +148,8 @@ DEPENDENCIES
   rack-test
   rails
   rake (~> 13.0)
-  unforgetable!
+  timecop
+  unforgettable!
 
 BUNDLED WITH
    2.2.7
