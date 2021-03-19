@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    unforgettable (0.0.0)
+    unforgettable (0.2.0)
       activerecord
 
 GEM
