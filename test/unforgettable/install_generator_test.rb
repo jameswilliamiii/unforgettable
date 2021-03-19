@@ -14,4 +14,10 @@ class Unforgettable::InstallGeneratorTest < ::Rails::Generators::TestCase
     dir = "#{destination_root}/db/migrate"
     assert_equal 3, Dir.entries(dir).length
   end
+
+  test "generates the unforgettable folder" do
+    file = "#{destination_root}/lib/tasks/unforgettable/.keep"
+
+    assert_path_exists(file)
+  end
 end

@@ -13,6 +13,10 @@ module Unforgettable
         migration_template "migration_template.rb", "db/migrate/create_unforgettable_releases.rb", migration_version: migration_version
       end
 
+      def create_unforgettable_folder
+        template('.keep', "lib/tasks/unforgettable/.keep")
+      end
+
       private
 
       def migration_version
