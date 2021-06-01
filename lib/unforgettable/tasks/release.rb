@@ -3,7 +3,7 @@ module Unforgettable
     class Release
       class << self
         def call
-          new_tasks.each { |task| run!(task) }
+          new_tasks.sort.each { |task| run!(task) }
         end
 
         private
