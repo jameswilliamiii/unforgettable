@@ -51,6 +51,55 @@ end
 after 'deploy:published',  'deploy:release'
 ```
 
+### Integration with Kamal
+
+You can integrate Unforgettable with Kamal deploys by calling it from a post-deploy hook.
+Create a file `post-deploy` under the `.kmal` folder in the root of your project.  The integration should look somethingt like:
+
+```ruby
+
+$stdout.sync = true
+
+$stderr.puts "Running bin/rails unforgettable:release on remote Docker containers..."
+
+def get_container_name(host)
+  base_name = "grogo-web"
+  destination = ENV["KAMAL_DESTINATION"]
+  version = ENV["KAMAL_VERSION"]
+
+  potential_names = [
+    [ base_name, destination, version ].reject { |v| v.to_s.strip.empty? }.join("-"),
+    [ base_name, version ].reject { |v| v.to_s.strip.empty? }.join("-")
+  ]
+
+  # Check potential names to see which matches a container id on the server.
+  potential_names.each do |name|
+    command = "ssh deploy@#{host} \"docker ps --format '{{.Names}}' | grep #{name}\""
+    result = `#{command}`.strip
+    return result unless result.empty?
+  end
+
+  nil
+end
+
+def execute_task(host, container_name)
+  task = "bin/rails unforgettable:release"
+  remote_host = "deploy@#{host}"
+
+  command = "ssh #{remote_host} 'docker exec #{container_name} #{task}'"
+  unless system(command)
+    $stderr.puts "Failed to execute rake task on remote Docker container: #{task} for host #{host}"
+  end
+end
+
+ENV["KAMAL_HOSTS"].to_s.split(",").each do |host|
+  container_name = get_container_name(host)
+  execute_task(host, container_name)
+end
+```
+
+Note: Kamal will not show the $stdout by default.  Run Kamal in verbose mode with `kamal deploy -v` in order to see any output.
+
 ### Rerunning Completed Tasks
 
 Unforgettable records all tasks that have been run as a row on the `unforgettable_releases` table.
